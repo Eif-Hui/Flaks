@@ -2,6 +2,7 @@
 # @Time    : 2020/3/8 下午10:37
 # @Author  : Hui
 # @File    : urls.py
-from .views import user,AddUsers
+from .views import user,Register,Login
 
-user.add_resource(AddUsers,'/api/add/users')
+user.add_resource(Login,'/login')
+user.add_resource(Register,'/api/add/register')

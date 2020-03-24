@@ -12,6 +12,6 @@ db=SQLAlchemy(app)
 
 
 config = {
-    'testing': TestingConfig,
+    'testing': '',
     'SECRET_KEY':"1qaz@wsx3edc"
 }
