@@ -4,5 +4,5 @@
 # @File    : urls.py
 from .views import user,Register,Login
 
-user.add_resource(Login,'/login')
+user.add_resource(Login,'/api/login')
 user.add_resource(Register,'/api/add/register')
