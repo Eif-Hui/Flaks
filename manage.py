@@ -16,4 +16,4 @@ app.register_blueprint(authApi)
 
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run(port=7080,debug=True)

@@ -68,15 +68,33 @@ class Register(Resource):
         account = request.json.get('account')
         username = request.json.get('username')
         password = request.json.get('password')
-        if account is None or password is None or username is None:
-            return jsonify({'code': 400, "msg": "账户密码不能为空"})
-        if User.query.filter_by(account = account).first() is not None:
-            return jsonify({'code': 400, "msg": "账户已存在"})
-        user = User(account = account,username=username)
-        user.hash_password(password)
-        db.session.add(user)
-        db.session.commit()
-        return jsonify({'code':200,"msg":"账户添加成功"})
+        new_password = request.json.get('new_password')
+        user_id = request.json.get('id')
+        if user_id:
+            old_data = User.query.filter_by(id=user_id).first()
+            if User.query.filter_by(username=username).first() and username != old_data.username:
+                return jsonify({'msg': '名字已存在', 'code': 400})
+            elif User.query.filter_by(account=account).first() and account != old_data.account:
+                return jsonify({'msg': '账号已存在', 'code': 400})
+            if new_password:
+                if not password:
+                    return jsonify({"code":400,"msg":"密码不能为空"})
+                else:
+                    old_data.password = password
+            old_data.username = username
+            db.session.commit()
+            return jsonify({"code":200,"msg":"修改成功"})
+        else:
+            if account is None or password is None or username is None:
+                return jsonify({'code': 400, "msg": "账户密码不能为空"})
+            if User.query.filter_by(account = account).first() is not None:
+                return jsonify({'code': 400, "msg": "账户已存在"})
+            user = User(account = account,username=username)
+            user.hash_password(password)
+            db.session.add(user)
+            db.session.commit()
+            return jsonify({'code':200,"msg":"账户添加成功"})
+
 
     @login_required
     def get(self):
@@ -107,6 +125,18 @@ class Register(Resource):
         db.session.add()
         db.session.commit()
         return jsonify({'msg': '密码修改成功', 'code': 200})
+
+    def delete(self):
+        user_id = request.json.get('id')
+        old_data = User.query.filter_by(id=user_id).first()
+        if not old_data:
+            return jsonify({"code":400,"msg":"用户Id不存在"})
+        else:
+            old_data.delete()
+            #User.query.filter_by(id=user_id).delete()
+            return jsonify({"code":200,"msg":"删除成功"})
+
+
 
 
 
