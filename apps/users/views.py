@@ -65,6 +65,10 @@ class Login(Resource):
 class Register(Resource):
     @login_required
     def post(self):
+        """
+        修改添加用户
+        :return:
+        """
         account = request.json.get('account')
         username = request.json.get('username')
         password = request.json.get('password')
@@ -98,6 +102,10 @@ class Register(Resource):
 
     @login_required
     def get(self):
+        """
+        获取用户信息
+        :return:
+        """
         account = request.args.get('account')
         _data = User.query.filter(User.account == account).first()
         if not _data:
@@ -106,7 +114,11 @@ class Register(Resource):
             return jsonify({"userId":_data.id,"username":_data.username,"account":_data.account})
 
     @login_required
-    def put(self):  # 修改密码
+    def put(self):
+        """
+        修改账户密码
+        :return:
+        """
         data = request.json
         account = data.get('account')
         old_password = data.get('oldPassword')
@@ -127,6 +139,10 @@ class Register(Resource):
         return jsonify({'msg': '密码修改成功', 'code': 200})
 
     def delete(self):
+        """
+        删除用户
+        :return:
+        """
         user_id = request.json.get('id')
         old_data = User.query.filter_by(id=user_id).first()
         if not old_data:
